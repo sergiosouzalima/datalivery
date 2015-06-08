@@ -6,6 +6,14 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# preload tokens in "..._envs.yml" to local ENV
+config = YAML.load(File.read(File.expand_path('../datalivery_envs.yml', __FILE__)))
+config.merge! config.fetch(Rails.env, {})
+config.each do |key, value|
+    ENV[key] = value.to_s unless value.kind_of? Hash
+end
+
+
 module Datalivery
   class Application < Rails::Application
 
